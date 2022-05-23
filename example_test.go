@@ -3,7 +3,7 @@ package strcase_test
 import (
 	"fmt"
 
-	"github.com/sraphs/go/x/strcase"
+	"github.com/sraphs/strcase"
 )
 
 func Example() {
