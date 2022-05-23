@@ -1,4 +1,4 @@
-MOD_NAME := github.com/sraphs/go-starter
+MOD_NAME := github.com/sraphs/strcase
 
 # Git variables
 GIT_COMMIT    = $(shell git rev-parse HEAD)
