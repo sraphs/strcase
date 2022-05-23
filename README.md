@@ -1,51 +1,81 @@
-# go-starter
+# strcase
 
 [![CI](https://github.com/sraphs/strcase/actions/workflows/ci.yml/badge.svg)](https://github.com/sraphs/strcase/actions/workflows/ci.yml)
 
->  Go project template repository
+strcase is a go package for converting string case to various cases (e.g. [snake case](https://en.wikipedia.org/wiki/Snake_case) or [camel case](https://en.wikipedia.org/wiki/CamelCase)) to see the full conversion table below.
 
+## Example
 
-## Work flow
-
-1. Create a new repository from go-starter
-2. Use `make rename` to change go mod name
-2. Create a dev branch from main
-3. Make changes
-4. Commit code
-5. Merge pull requests
-5. Create tag
-6. Git Action auto generate CHANGELOG.md and create release
-
-## Features
-
-- xxxx
-- xxxx
-- xxxx
-
-## Install
-
-```bash
-go get github.com/sraphs/strcase
+```go
+s := "AnyKind.of_string"
 ```
+
+| Function                    | Result               |
+| --------------------------- | -------------------- |
+| `ToCamel(s)`                | `anyKindOfString`    |
+| `ToPascal(s)`               | `AnyKindOfString`    |
+| `ToSnake(s)`                | `any_kind_of_string` |
+| `ToSnakeWithIgnore(s, '.')` | `any_kind.of_string` |
+| `ToDot(s)`                  | `any.kind.of.string` |
+| `ToDotWithIgnore(s, '_')`   | `any.kind.of_string` |
+| `ToKebab(s)`                | `any-kind-of-string` |
+| `ToKebabWithIgnore(s, '.')` | `any-kind.of-string` |
 
 ## Usage
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+```go
+package strcase_test
 
-## Contributing
+import (
+	"fmt"
 
-We alway welcome your contributions :clap:
+	"github.com/sraphs/go/x/strcase"
+)
 
-1.  Fork the repository
-2.  Create Feat_xxx branch
-3.  Commit your code
-4.  Create Pull Request
+func Example() {
+	fmt.Println(strcase.ToCamel("AnyKind.of_string"))
+	fmt.Println(strcase.ToPascal("AnyKind.of_string"))
+	fmt.Println(strcase.ToSnake("AnyKind.of_string"))
+	fmt.Println(strcase.ToSnakeWithIgnore("AnyKind.of_string", "."))
+	fmt.Println(strcase.ToDot("AnyKind.of_string"))
+	fmt.Println(strcase.ToDotWithIgnore("AnyKind.of_string", "_"))
+	fmt.Println(strcase.ToKebab("AnyKind.of_string"))
+	fmt.Println(strcase.ToKebabWithIgnore("AnyKind.of_string", "."))
+	// Output:
+	// anyKindOfString
+	// AnyKindOfString
+	// any_kind_of_string
+	// any_kind.of_string
+	// any.kind.of.string
+	// any.kind.of_string
+	// any-kind-of-string
+	// any-kind.of-string
+}
 
+```
 
-## CHANGELOG
-See [Releases](https://github.com/sraphs/strcase/releases)
+## Custom Acronyms for ToCamel && ToLowerCamel
 
-## License
-[MIT © sraph.com](./LICENSE)
+Often times text can contain specific acronyms which you need to be handled a certain way.
+Out of the box `strcase` treats the string "ID" as "Id" or "id" but there is no way to cater
+for every case in the wild.
+
+To configure your custom acronym globally you can use the following before running any conversion
+
+```go
+import (
+    "github.com/sraphs/go/x/strcase"
+)
+
+func init() {
+    // results in "Api" using ToCamel("API")
+    // results in "api" using ToLowerCamel("API")
+    strcase.ConfigureAcronym("API", "api")
+    
+    // results in "PostgreSQL" using ToCamel("PostgreSQL")
+    // results in "postgreSQL" using ToLowerCamel("PostgreSQL")
+    strcase.ConfigureAcronym("PostgreSQL", "PostgreSQL")
+
+}
+
+```
